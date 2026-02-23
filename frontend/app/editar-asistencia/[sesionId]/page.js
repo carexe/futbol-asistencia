@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { getAsistenciaBySesion, saveAsistencia, getJugadoresByGrupo } from '@/lib/api'
 
 export default function EditarAsistencia() {
@@ -12,15 +11,12 @@ export default function EditarAsistencia() {
   const [guardado, setGuardado] = useState(false)
   const [loading, setLoading] = useState(true)
   const [guardando, setGuardando] = useState(false)
-  const [grupoId, setGrupoId] = useState(null)
-  const [fecha, setFecha] = useState('')
 
   useEffect(() => {
     async function cargar() {
       const asistencia = await getAsistenciaBySesion(sesionId)
       if (asistencia.length > 0) {
         const gId = asistencia[0].jugador.grupoId
-        setGrupoId(gId)
         const jugadoresData = await getJugadoresByGrupo(gId)
         setJugadores(jugadoresData)
         const map = {}
@@ -54,19 +50,19 @@ export default function EditarAsistencia() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center">
-      <p className="text-green-700 text-xl">Cargando...</p>
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-red-700 text-xl">Cargando...</p>
     </main>
   )
 
   if (guardado) return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="text-center">
         <p className="text-6xl mb-4">✅</p>
-        <h2 className="text-2xl font-bold text-green-800 mb-2">Asistencia actualizada</h2>
+        <h2 className="text-2xl font-bold text-red-900 mb-2">Asistencia actualizada</h2>
         <button
           onClick={() => router.back()}
-          className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold">
+          className="bg-red-700 text-white px-6 py-3 rounded-xl font-semibold">
           Volver al historial
         </button>
       </div>
@@ -76,22 +72,22 @@ export default function EditarAsistencia() {
   const totalPresentes = Object.values(presentes).filter(Boolean).length
 
   return (
-    <main className="min-h-screen bg-green-50 p-6">
+    <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-md mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-green-800">Editar Asistencia</h1>
-          <button onClick={() => router.back()} className="text-green-600 text-sm">← Volver</button>
+          <h1 className="text-2xl font-bold text-red-900">Editar Asistencia</h1>
+          <button onClick={() => router.back()} className="text-red-600 text-sm">← Volver</button>
         </div>
 
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => marcarTodos(true)}
-            className="flex-1 bg-green-100 text-green-700 py-2 rounded-xl text-sm font-medium">
+            className="flex-1 bg-red-100 text-red-700 py-2 rounded-xl text-sm font-medium">
             Todos presentes
           </button>
           <button
             onClick={() => marcarTodos(false)}
-            className="flex-1 bg-red-50 text-red-500 py-2 rounded-xl text-sm font-medium">
+            className="flex-1 bg-gray-100 text-gray-500 py-2 rounded-xl text-sm font-medium">
             Todos ausentes
           </button>
         </div>
@@ -116,13 +112,13 @@ export default function EditarAsistencia() {
 
         <div className="bg-white rounded-2xl p-4 shadow mb-4 flex justify-between items-center">
           <span className="text-gray-600 text-sm">Presentes</span>
-          <span className="font-bold text-green-700 text-lg">{totalPresentes} / {jugadores.length}</span>
+          <span className="font-bold text-red-700 text-lg">{totalPresentes} / {jugadores.length}</span>
         </div>
 
         <button
           onClick={handleGuardar}
           disabled={guardando}
-          className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-lg shadow active:opacity-70 disabled:opacity-50">
+          className="w-full bg-red-700 text-white py-4 rounded-2xl font-bold text-lg shadow active:opacity-70 disabled:opacity-50">
           {guardando ? 'Guardando...' : 'Guardar Cambios'}
         </button>
       </div>

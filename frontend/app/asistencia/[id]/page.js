@@ -17,7 +17,6 @@ export default function Asistencia() {
   useEffect(() => {
     getJugadoresByGrupo(id).then(data => {
       setJugadores(data)
-      // Por defecto todos presentes
       const inicial = {}
       data.forEach(j => { inicial[j.id] = true })
       setPresentes(inicial)
@@ -48,18 +47,18 @@ export default function Asistencia() {
   }
 
   if (loading) return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center">
-      <p className="text-green-700 text-xl">Cargando...</p>
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-red-700 text-xl">Cargando...</p>
     </main>
   )
 
   if (guardado) return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="text-center">
         <p className="text-6xl mb-4">✅</p>
-        <h2 className="text-2xl font-bold text-green-800 mb-2">Asistencia guardada</h2>
-        <p className="text-green-600 mb-6">{hoy}</p>
-        <Link href="/" className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold">
+        <h2 className="text-2xl font-bold text-red-900 mb-2">Asistencia guardada</h2>
+        <p className="text-red-600 mb-6">{hoy}</p>
+        <Link href="/" className="bg-red-700 text-white px-6 py-3 rounded-xl font-semibold">
           Volver al inicio
         </Link>
       </div>
@@ -69,29 +68,27 @@ export default function Asistencia() {
   const totalPresentes = Object.values(presentes).filter(Boolean).length
 
   return (
-    <main className="min-h-screen bg-green-50 p-6">
+    <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-md mx-auto">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold text-green-800">Asistencia</h1>
-          <Link href="/" className="text-green-600 text-sm">← Volver</Link>
+          <h1 className="text-2xl font-bold text-red-900">Asistencia</h1>
+          <Link href="/" className="text-red-600 text-sm">← Volver</Link>
         </div>
-        <p className="text-green-600 text-sm mb-6">{hoy}</p>
+        <p className="text-red-600 text-sm mb-6">{hoy}</p>
 
-        {/* Botones marcar todos */}
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => marcarTodos(true)}
-            className="flex-1 bg-green-100 text-green-700 py-2 rounded-xl text-sm font-medium">
+            className="flex-1 bg-red-100 text-red-700 py-2 rounded-xl text-sm font-medium">
             Todos presentes
           </button>
           <button
             onClick={() => marcarTodos(false)}
-            className="flex-1 bg-red-50 text-red-500 py-2 rounded-xl text-sm font-medium">
+            className="flex-1 bg-gray-100 text-gray-500 py-2 rounded-xl text-sm font-medium">
             Todos ausentes
           </button>
         </div>
 
-        {/* Lista de jugadores */}
         <div className="bg-white rounded-2xl shadow overflow-hidden mb-6">
           {jugadores.map((jugador, index) => (
             <div
@@ -110,16 +107,15 @@ export default function Asistencia() {
           ))}
         </div>
 
-        {/* Resumen y guardar */}
         <div className="bg-white rounded-2xl p-4 shadow mb-4 flex justify-between items-center">
           <span className="text-gray-600 text-sm">Presentes</span>
-          <span className="font-bold text-green-700 text-lg">{totalPresentes} / {jugadores.length}</span>
+          <span className="font-bold text-red-700 text-lg">{totalPresentes} / {jugadores.length}</span>
         </div>
 
         <button
           onClick={handleGuardar}
           disabled={guardando}
-          className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-lg shadow active:opacity-70 disabled:opacity-50">
+          className="w-full bg-red-700 text-white py-4 rounded-2xl font-bold text-lg shadow active:opacity-70 disabled:opacity-50">
           {guardando ? 'Guardando...' : 'Guardar Asistencia'}
         </button>
       </div>

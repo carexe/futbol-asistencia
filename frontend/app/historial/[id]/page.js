@@ -20,7 +20,6 @@ export default function Historial() {
       setJugadores(jugadoresData)
       setSesiones(sesionesData)
 
-      // Carga asistencia de cada sesión
       const asistenciasMap = {}
       await Promise.all(
         sesionesData.map(async sesion => {
@@ -45,20 +44,26 @@ export default function Historial() {
   }
 
   function formatFecha(fecha) {
-	  const soloFecha = fecha.split('T')[0]
-	  const d = new Date(soloFecha + 'T12:00:00')
-	  const dia = d.toLocaleDateString('es-CO', { weekday: 'short' })
-	  const numero = d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: '2-digit' })
-	  return `${dia} ${numero}`
-	}
+    const soloFecha = fecha.split('T')[0]
+    const d = new Date(soloFecha + 'T12:00:00')
+    const dia = d.toLocaleDateString('es-CO', { weekday: 'short' })
+    const numero = d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: '2-digit' })
+    return `${dia} ${numero}`
+  }
 
-	function formatFechaCSV(fecha) {
-	  const soloFecha = fecha.split('T')[0]
-	  const d = new Date(soloFecha + 'T12:00:00')
-	  const dia = d.toLocaleDateString('es-CO', { weekday: 'short' })
-	  const numero = d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: '2-digit' })
-	  return `${dia} ${numero}`
-	}
+  function formatFechaCSV(fecha) {
+    const soloFecha = fecha.split('T')[0]
+    const d = new Date(soloFecha + 'T12:00:00')
+    const dia = d.toLocaleDateString('es-CO', { weekday: 'short' })
+    const numero = d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: '2-digit' })
+    return `${dia} ${numero}`
+  }
+
+  async function handleEliminarSesion(sesionId) {
+    if (!confirm('¿Eliminar esta sesión y su asistencia?')) return
+    await deleteSesion(sesionId)
+    setSesiones(prev => prev.filter(s => s.id !== sesionId))
+  }
 
   async function handleExportar() {
     const filas = [
@@ -73,32 +78,26 @@ export default function Historial() {
       filas.push(fila.join(','))
     })
     const csv = filas.join('\n')
-    const blob = new Blob(['\uFEFF' + csv, ], { type: 'text/csv;charset=utf-8' })
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
     a.download = `asistencia-grupo-${id}.csv`
     a.click()
   }
-  
-  async function handleEliminarSesion(sesionId) {
-	  if (!confirm('¿Eliminar esta sesión y su asistencia?')) return
-	  await deleteSesion(sesionId)
-	  setSesiones(prev => prev.filter(s => s.id !== sesionId))
-	}
 
   if (loading) return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center">
-      <p className="text-green-700 text-xl">Cargando...</p>
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-red-700 text-xl">Cargando...</p>
     </main>
   )
 
   return (
-    <main className="min-h-screen bg-green-50 p-6">
+    <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-green-800">Historial</h1>
-          <Link href="/" className="text-green-600 text-sm">← Volver</Link>
+          <h1 className="text-2xl font-bold text-red-900">Historial</h1>
+          <Link href="/" className="text-red-600 text-sm">← Volver</Link>
         </div>
 
         {sesiones.length === 0 ? (
@@ -113,17 +112,17 @@ export default function Historial() {
                   <tr className="border-b border-gray-100">
                     <th className="text-left p-3 text-gray-600 font-medium">Jugador</th>
                     {sesiones.map(s => (
-					  <th key={s.id} className="p-3 text-gray-600 font-medium text-center">
-						<Link href={`/editar-asistencia/${s.id}`} className="hover:text-green-600 block">
-						  {formatFecha(s.fecha)}
-						</Link>
-						<button
-						  onClick={() => handleEliminarSesion(s.id)}
-						  className="text-red-400 text-xs hover:text-red-600 mt-1">
-						  Eliminar
-						</button>
-					  </th>
-					))}
+                      <th key={s.id} className="p-3 text-gray-600 font-medium text-center">
+                        <Link href={`/editar-asistencia/${s.id}`} className="hover:text-red-600 block">
+                          {formatFecha(s.fecha)}
+                        </Link>
+                        <button
+                          onClick={() => handleEliminarSesion(s.id)}
+                          className="text-red-400 text-xs hover:text-red-600 mt-1">
+                          Eliminar
+                        </button>
+                      </th>
+                    ))}
                     <th className="p-3 text-gray-600 font-medium text-center">Total</th>
                   </tr>
                 </thead>
@@ -134,11 +133,11 @@ export default function Historial() {
                       <td className="p-3 font-medium text-gray-800">{jugador.nombre}</td>
                       {sesiones.map(s => (
                         <td key={s.id} className="p-3 text-center">
-                          {estaPresente(s.id, jugador.id) === true ? '✅' : 
+                          {estaPresente(s.id, jugador.id) === true ? '✅' :
                            estaPresente(s.id, jugador.id) === false ? '❌' : '—'}
                         </td>
                       ))}
-                      <td className="p-3 text-center font-semibold text-green-700">
+                      <td className="p-3 text-center font-semibold text-red-700">
                         {totalPresente(jugador.id)}/{sesiones.length}
                       </td>
                     </tr>
@@ -149,7 +148,7 @@ export default function Historial() {
 
             <button
               onClick={handleExportar}
-              className="w-full bg-white border border-green-600 text-green-700 py-3 rounded-2xl font-semibold">
+              className="w-full bg-white border border-red-700 text-red-700 py-3 rounded-2xl font-semibold">
               Exportar CSV
             </button>
           </>
