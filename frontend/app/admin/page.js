@@ -82,20 +82,20 @@ export default function Admin() {
         {/* Crear profesor */}
         <div className="bg-white rounded-2xl p-4 shadow mb-4">
           <h2 className="font-semibold text-gray-700 mb-3">Nuevo Profesor</h2>
-          <div className="flex gap-2">
-            <input
-              className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm"
-              placeholder="Nombre del profesor"
-              value={nombreProfesor}
-              onChange={e => setNombreProfesor(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleCrearProfesor()}
-            />
-            <button
-              onClick={handleCrearProfesor}
-              className="bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
-              Agregar
-            </button>
-          </div>
+          <div className="flex flex-col gap-2">
+			  <input
+				className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+				placeholder="Nombre del profesor"
+				value={nombreProfesor}
+				onChange={e => setNombreProfesor(e.target.value)}
+				onKeyDown={e => e.key === 'Enter' && handleCrearProfesor()}
+			  />
+			  <button
+				onClick={handleCrearProfesor}
+				className="w-full bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+				Agregar
+			  </button>
+			</div>
         </div>
 
         {/* Crear grupo */}
