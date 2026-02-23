@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profesor {
+  id      Int      @id @default(autoincrement())
+  nombre  String
+  grupos  Grupo[]
+}
+
+model Grupo {
+  id          Int        @id @default(autoincrement())
+  nombre      String
+  profesor    Profesor   @relation(fields: [profesorId], references: [id])
+  profesorId  Int
+  horarios    Horario[]
+  jugadores   Jugador[]
+  sesiones    Sesion[]
+}
+
+model Horario {
+  id          Int    @id @default(autoincrement())
+  diaSemana   String
+  grupo       Grupo  @relation(fields: [grupoId], references: [id])
+  grupoId     Int
+}
+
+model Jugador {
+  id          Int          @id @default(autoincrement())
+  nombre      String
+  grupo       Grupo        @relation(fields: [grupoId], references: [id])
+  grupoId     Int
+  asistencias Asistencia[]
+}
+
+model Sesion {
+  id          Int          @id @default(autoincrement())
+  fecha       DateTime
+  grupo       Grupo        @relation(fields: [grupoId], references: [id])
+  grupoId     Int
+  asistencias Asistencia[]
+}
+
+model Asistencia {
+  sesion      Sesion  @relation(fields: [sesionId], references: [id])
+  sesionId    Int
+  jugador     Jugador @relation(fields: [jugadorId], references: [id])
+  jugadorId   Int
+  presente    Boolean
+
+  @@id([sesionId, jugadorId])
+}
