@@ -31,4 +31,16 @@ router.post('/', async (req, res) => {
   }
 })
 
+// Eliminar sesión y su asistencia
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    await prisma.asistencia.deleteMany({ where: { sesionId: id } })
+    await prisma.sesion.delete({ where: { id } })
+    res.json({ mensaje: 'Sesión eliminada' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 module.exports = router

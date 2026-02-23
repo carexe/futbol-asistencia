@@ -7,7 +7,11 @@ router.get('/sesion/:sesionId', async (req, res) => {
   try {
     const asistencia = await prisma.asistencia.findMany({
       where: { sesionId: parseInt(req.params.sesionId) },
-      include: { jugador: true }
+      include: { 
+		  jugador: {
+			include: { grupo: true }
+		  }
+		}
     })
     res.json(asistencia)
   } catch (error) {

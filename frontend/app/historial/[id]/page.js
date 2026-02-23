@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { getSesionesByGrupo, getAsistenciaBySesion, getJugadoresByGrupo } from '@/lib/api'
+import { getSesionesByGrupo, getAsistenciaBySesion, getJugadoresByGrupo, deleteSesion } from '@/lib/api'
 
 export default function Historial() {
   const { id } = useParams()
@@ -80,6 +80,12 @@ export default function Historial() {
     a.download = `asistencia-grupo-${id}.csv`
     a.click()
   }
+  
+  async function handleEliminarSesion(sesionId) {
+	  if (!confirm('¿Eliminar esta sesión y su asistencia?')) return
+	  await deleteSesion(sesionId)
+	  setSesiones(prev => prev.filter(s => s.id !== sesionId))
+	}
 
   if (loading) return (
     <main className="min-h-screen bg-green-50 flex items-center justify-center">
@@ -107,10 +113,17 @@ export default function Historial() {
                   <tr className="border-b border-gray-100">
                     <th className="text-left p-3 text-gray-600 font-medium">Jugador</th>
                     {sesiones.map(s => (
-                      <th key={s.id} className="p-3 text-gray-600 font-medium text-center">
-                        {formatFecha(s.fecha)}
-                      </th>
-                    ))}
+					  <th key={s.id} className="p-3 text-gray-600 font-medium text-center">
+						<Link href={`/editar-asistencia/${s.id}`} className="hover:text-green-600 block">
+						  {formatFecha(s.fecha)}
+						</Link>
+						<button
+						  onClick={() => handleEliminarSesion(s.id)}
+						  className="text-red-400 text-xs hover:text-red-600 mt-1">
+						  Eliminar
+						</button>
+					  </th>
+					))}
                     <th className="p-3 text-gray-600 font-medium text-center">Total</th>
                   </tr>
                 </thead>

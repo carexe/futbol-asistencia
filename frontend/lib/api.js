@@ -81,3 +81,10 @@ export async function getAsistenciaByJugador(jugadorId) {
   const res = await fetch(`${API_URL}/api/asistencia/jugador/${jugadorId}`)
   return res.json()
 }
+
+export async function deleteSesion(id) {
+  const res = await fetch(`${API_URL}/api/sesiones/${id}`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}
